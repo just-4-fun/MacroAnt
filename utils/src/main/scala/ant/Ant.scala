@@ -11,7 +11,12 @@ class Ant extends StaticAnnotation {
 object AntImpl {
 	def impl(c: Context)(annottees: c.Tree*): c.Tree = {
 		import c.universe._
-		c.typecheck(annottees.head) // this line causes compilation error
+		c.internal.enclosingOwner.asType.toType // this line is Ok
+		// Any commented line below causes the same compilation error
+//		c.internal.enclosingOwner.asType.toType.decls
+//		c.mirror.staticModule(c.internal.enclosingOwner.fullName + ".A".toString)
+//		c.typecheck(annottees.head) // this line causes compilation error
+
 		q"""implicit class A(val v: Int) extends AnyVal { def ask() = println("ok") }"""
 	}
 }
